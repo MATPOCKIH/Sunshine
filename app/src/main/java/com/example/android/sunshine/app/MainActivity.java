@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
@@ -56,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
+
         }
 
         @Override
@@ -75,6 +80,13 @@ public class MainActivity extends ActionBarActivity {
             };
 
             List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
+
+            // Адаптер, который будет управлять выводом данных в listView
+            ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
+
+            ListView lView = (ListView) rootView.findViewById(R.id.listview_forecast);
+
+            lView.setAdapter(stringArrayAdapter);
 
             return rootView;
         }
