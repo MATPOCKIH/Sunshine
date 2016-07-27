@@ -8,6 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -57,6 +62,20 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            String[] data = {
+                "Сегодня - солнечно - 25/21",
+                "Завтра - переменная облачность - 22/19",
+                "Послезавтра - Пасмурно - 22/17",
+                "27.07 - пасмурно - 24/19",
+                "28.07 - солнечно - 25/21",
+                "29.07 - переменная облачность - 22/19",
+                "30.07 - Пасмурно - 22/17",
+                "31.07 - пасмурно - 24/19"
+            };
+
+            List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
+
             return rootView;
         }
     }
