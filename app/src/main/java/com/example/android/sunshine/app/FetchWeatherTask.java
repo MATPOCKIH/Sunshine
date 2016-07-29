@@ -35,11 +35,14 @@ public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
 
+           // String sURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=344101&mode=json&units=metric&cnt=7"
+           // sURL += "&APPI=" + Build.OPEN_WEATHER_MAP_API_KEY;
             URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=344101&mode=json&units=metric&cnt=7&APPID=" + OPEN_MAP_API_KEY);
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
+
             Log.d(LOG_TAG, "connect ");
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
@@ -63,6 +66,8 @@ public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
                 return null;
             }
             forecastJsonStr = buffer.toString();
+
+            Log.v(LOG_TAG, "Forecast JSON String:" + forecastJsonStr);
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
