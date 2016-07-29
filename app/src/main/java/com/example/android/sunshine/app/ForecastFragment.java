@@ -85,7 +85,7 @@ public class ForecastFragment extends Fragment {
 
         // Создаем фоновый поток для загрузки данных
         FetchWeatherTask myTask = new FetchWeatherTask();
-        myTask.execute();
+        myTask.execute("344101");
 
         return rootView;
     }
