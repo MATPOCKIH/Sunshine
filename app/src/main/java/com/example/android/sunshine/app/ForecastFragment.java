@@ -19,11 +19,14 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
 
@@ -46,9 +49,9 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_refresh:
-                Log.d("Anton", "action_refresh");
+                Log.d("ForecastFragment", "action_refresh_click");
                 FetchWeatherTask weatherTask = new FetchWeatherTask();
-                weatherTask.execute();
+                weatherTask.execute("344101");
                 return true;
             default:
                 return false;
@@ -74,7 +77,20 @@ public class ForecastFragment extends Fragment {
                 "02.08 - гроза - Дождь - 17/16"
         };
 
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
+        // Создаем фоновый поток для загрузки данных
+        FetchWeatherTask myTask = new FetchWeatherTask();
+        myTask.execute("344101");
+
+        String[] forecastArray = null;
+        try {
+            forecastArray = myTask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        List<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
 
         // Адаптер, который будет управлять выводом данных в listView
         ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
@@ -83,10 +99,8 @@ public class ForecastFragment extends Fragment {
 
         lView.setAdapter(stringArrayAdapter);
 
-        // Создаем фоновый поток для загрузки данных
-        FetchWeatherTask myTask = new FetchWeatherTask();
-        myTask.execute("344101");
 
         return rootView;
     }
+
 }
