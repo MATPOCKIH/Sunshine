@@ -6,7 +6,6 @@ package com.example.android.sunshine.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,9 +48,17 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_refresh:
-                Log.d("ForecastFragment", "action_refresh_click");
                 FetchWeatherTask weatherTask = new FetchWeatherTask();
                 weatherTask.execute("344101");
+                String[] forecastArray = null;
+                try {
+                    mForecastAdapter.add("Тестовая строка");
+                    forecastArray = weatherTask.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 return true;
             default:
                 return false;
@@ -63,27 +70,13 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String[] data = {
-                "Сегодня - солнечно - 25/21",
-                "Завтра - переменная облачность - 22/19",
-                "Послезавтра - Пасмурно - 22/17",
-                "27.07 - пасмурно - 24/19",
-                "28.07 - солнечно - 25/21",
-                "29.07 - переменная облачность - 22/19",
-                "30.07 - Пасмурно - 22/17",
-                "31.07 - пасмурно - 24/19",
-                "01.08 - переменная облачность - 22/19",
-                "02.08 - Пасмурно - 22/17",
-                "02.08 - гроза - Дождь - 17/16"
-        };
-
         // Создаем фоновый поток для загрузки данных
-        FetchWeatherTask myTask = new FetchWeatherTask();
-        myTask.execute("344101");
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        weatherTask.execute("344101");
 
         String[] forecastArray = null;
         try {
-            forecastArray = myTask.get();
+            forecastArray = weatherTask.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -93,11 +86,11 @@ public class ForecastFragment extends Fragment {
         List<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
 
         // Адаптер, который будет управлять выводом данных в listView
-        ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
 
         ListView lView = (ListView) rootView.findViewById(R.id.listview_forecast);
 
-        lView.setAdapter(stringArrayAdapter);
+        lView.setAdapter(mForecastAdapter);
 
 
         return rootView;

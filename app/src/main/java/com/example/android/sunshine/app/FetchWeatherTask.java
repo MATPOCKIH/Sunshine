@@ -30,11 +30,12 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
     @Override
     protected void onPostExecute(String[] strings) {
         super.onPostExecute(strings);
+        Log.d(LOG_TAG, "onPostExecute");
     }
 
     @Override
     protected String[] doInBackground(String... params) {
-        Log.d(LOG_TAG, "Start doInBackground with params:");
+
         // Переменные нужно открыть вне блока try/catch
         // соединение нужно будет закрыть в блоке finally
         HttpURLConnection urlConnection = null;
@@ -48,7 +49,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         String format = "json";
         String units = "metric";
         String language = "ru";
-        int numDays = 7;
+        int numDays = 14;
 
         try {
             // Construct the URL for the OpenWeatherMap query
@@ -69,8 +70,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
                     .appendQueryParameter("cnt", Integer.toString(numDays))
                     .appendQueryParameter("lang", language)
                     .appendQueryParameter("APPID", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
-
-            Log.d(LOG_TAG, "LINK: " + apiUri.toString());
 
             URL url = new URL(apiUri.toString());
             // Create the request to OpenWeatherMap, and open the connection
@@ -101,9 +100,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
                 return null;
             }
             forecastJsonStr = buffer.toString();
-
-            Log.v(LOG_TAG, "Forecast JSON String:" + forecastJsonStr);
-
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -184,7 +180,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
             // Формируем строку
             forecastResultArray[i] = day + " - " + description + " - " + highAndLow;
-            Log.d(LOG_TAG, forecastResultArray[i]);
         }
 
         return forecastResultArray;
